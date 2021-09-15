@@ -1,5 +1,5 @@
 import pygame, random, os, sys
-import entity
+from entity import * 
 # (NOTE) Abstract terrain content from main file into here
 
 '''class terrain:
@@ -55,3 +55,15 @@ class weather:
             #rain(self.window)
             custom_particles(self.window, 0.01, x_range, y_range, colour)
         # Change Background 
+
+
+para_scale_buffer = 0.5
+def gen_world_objects(offset, y, filepath, chunk_x, world_terrain, layer):
+    index = len(chunk_x) - 1
+    for chunk in world_terrain:
+        for x in chunk_x:
+            chunk = Entity(chunk_x[index]+offset,y,filepath)
+            layer.add(chunk)
+            chunk.Scale(para_scale_buffer)
+        index -= 1
+        # (NOTE) - Needs refining: Use index and count down to 0 to use arr values
