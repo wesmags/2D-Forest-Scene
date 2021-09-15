@@ -2,13 +2,9 @@ import sys, os, random
  
 import pygame
 from pygame.locals import *
-
-
 from project import *
 from entity import *
-from game_world import * 
-
-
+ 
 pygame.init()
  
 fps = 60
@@ -35,7 +31,7 @@ treeline = 508
 # (AREA) Entity Initialisation 
 skybox = Entity(0,-50, "assets/bluesky_1.jpg")
 
-hills = Entity(850,560, "assets/hills_3.png")
+hills = Entity(850,499, "assets/hills_3.png")
 
 #mountain = Entity(850, 499, "assets/grassy_mountain_1.png")
 
@@ -85,9 +81,6 @@ def event_system():
         if event.type == QUIT:
             pygame.quit() 
             sys.exit() 
-        if keys[pygame.K_ESCAPE]:
-            pygame.quit() 
-            sys.exit() 
         if event.type == VIDEORESIZE:
             window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
         if keys[pygame.K_F11]:
@@ -101,9 +94,19 @@ def event_system():
 particles = []
 particles_2 = []
 
+layer_hierachy = {
+    1 : sky,
+    2 : background, 
+    3 : foreground 
+}
 
 
-def create_particles():
+def render_window(window, dt, layer_data):
+    for layer in layer_data:
+        render_layer = layer_data[layer]
+        render_layer.draw(window)
+        render_layer.update()
+
     x = random.randint(120, 200)
     #y = random.randint(180, 200)
     y = 400
@@ -118,45 +121,6 @@ def create_particles():
         if particle[2] <= 0:
             particles.remove(particle)
 
-
-def tree_leaves(x = random.randint(120, 200),y = random.randint(180, 200)):
-    particles.append([[x, y], [1,1], 2.5])
-    for particle in particles:
-        particle[0][0] += particle[1][0]
-        particle[0][1] += particle[1][1]
-        particle[2] -= 0.1
-        particle[1][1] += 0.1
-        pygame.draw.circle(window, (0, 180, 0), [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
-        if particle[2] <= 0:
-            particles.remove(particle)
-
-
-
-layer_hierachy_bg = {
-    1 : sky,
-    2 : background
-}
-layer_hierachy_fg = {
-    1 : foreground 
-}
-
-# (NOTE) Quick fix to multiple layer iteration rendering issue
-def update_frame(layer,window):
-    layer.draw(window)
-    layer.update()
-
-weather_handler = weather(None, window)
-
-
-
-def render_window(window, dt, layer_data_1, layer_data_2):
-    for layer in layer_data_1:
-        render_layer = layer_data_1[layer]
-        render_layer.draw(window)
-        render_layer.update()
-    #weather_handler.change_weather("rain", skybox,"assets/dark_sky_1.png")
-    update_frame(foreground,window)
-
     pygame.display.flip()
 
 
@@ -168,6 +132,6 @@ dt = 1/fps
 # Game loop.
 while True:
     event_system()
-    render_window(window, dt, layer_hierachy_bg, layer_hierachy_fg)
+    render_window(window, dt, layer_hierachy)
     dt = fpsClock.tick(fps)
 pygame.quit()
