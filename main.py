@@ -24,8 +24,8 @@ keys = pygame.key.get_pressed()
 world_terrain = [0,0,0,0,0,0,0,0,0,0,0,0,0]
 parallax_objs = [0,0,0]
 
-parallax_origin = 850 
-para_offset = 815
+parallax_origin = 315 
+para_offset = 395
 
 para_x = [parallax_origin, parallax_origin+para_offset, parallax_origin+para_offset*2]
 para_y = 640
@@ -51,7 +51,7 @@ skybox = Entity(0,-50, "assets/bluesky_1.jpg")
 
 hills = Entity(850,560, "assets/hills_3.png")
 
-mountain = Entity(850, 499, "assets/grassy_mountain_1.png")
+mountain = Entity(850, 380, "assets/mountain_1.png")
 
 pine_tree = Entity(500, treeline, "assets/pinetree_2.png")
     
@@ -75,11 +75,12 @@ def gen_chunk(y):
 
 
 sky.add(skybox)
-#background.add(mountain)
+background.add(mountain)
 #background.add(hills)
-gen_world_objects(-100, 610,"assets/hills_3_dark.png", para_x, parallax_objs, background)
-gen_world_objects(0, 640,"assets/hills_3.png", para_x, parallax_objs, background)
-gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_amount, background)
+#gen_world_objects(-100, 610,"assets/hills_3_dark.png", para_x, parallax_objs, background, para_scale_buffer)
+gen_world_objects(-100, 550,"assets/grass_hills_1_light.png", para_x, parallax_objs, background, 0.7)
+gen_world_objects(0, 577,"assets/grass_hills_1.png", para_x, parallax_objs, background, 0.7)
+gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_amount, background, 0.5)
 
 
 
@@ -187,13 +188,9 @@ def render_window(window, dt, layer_data_1, layer_data_2):
         for i in range(len(leaf)):
             pygame.draw.circle(window, (0,100,0), leaf[i], 2)
             leaf[i][1] += random.randint(0,2)
-
-            # If the snow flake has moved off the bottom of the screen
             if leaf[i][1] > 500:
-                # Reset it just above the top
                 y = random.randrange(200, 220)
                 leaf[i][1] = y
-                # Give it a new x position
                 x = random.randrange(275, 480)
                 leaf[i][0] = x
     update_frame(foreground,window)

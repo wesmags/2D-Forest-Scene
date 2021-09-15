@@ -58,8 +58,8 @@ class weather:
         # Change Background 
 
 
-para_scale_buffer = 0.5
-def gen_world_objects(offset, y, filepath, chunk_x, world_terrain, layer):
+
+def gen_world_objects(offset, y, filepath, chunk_x, world_terrain, layer, para_scale_buffer):
     index = len(chunk_x) - 1
     for chunk in world_terrain:
         for x in chunk_x:
