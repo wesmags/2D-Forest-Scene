@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "optimization/world object generation.md",
+            "file": "game world/Atmosphere.md",
             "mode": "source"
           }
         }
@@ -68,7 +68,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "optimization/world object generation.md",
+                "file": "game world/Atmosphere.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -88,6 +88,10 @@
   },
   "active": "7fe06ecea751852a",
   "lastOpenFiles": [
+    "game world/Untitled.md",
+    "optimization/rendering introspection.md",
+    "optimization/scene abstraction for easier control.md",
+    "optimization/world object generation.md",
     "optimization/Untitled.md",
     "Untitled.md"
   ]

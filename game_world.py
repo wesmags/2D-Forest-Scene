@@ -49,9 +49,10 @@ class weather:
         self.weather_type = weather_type
         if self.weather_type == "rain":
             sky.swapSprite(new_sky)
+            sky.Scale(3)
             x_range = random.randint(120, 1000)
             y_range = y = random.randint(180, 200)
-            colour = (0, 20, 100)
+            colour = (0, 20, 200)
             #rain(self.window)
             custom_particles(self.window, 0.01, x_range, y_range, colour)
         # Change Background 

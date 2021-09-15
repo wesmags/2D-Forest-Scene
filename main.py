@@ -36,6 +36,13 @@ c_off = 140
 chunk_x = [chunk_origin,c_off,c_off*2,c_off*3,c_off*4,c_off*5,c_off*6,c_off*7,c_off*8,c_off*9,c_off*10,c_off*11,c_off*12]
 chunk_y = 765
 
+
+tree_amount = [0,0,0,0]
+t_off  = 250
+t_origin = 500
+t_pos = t_off + t_origin
+tree_x = [t_origin, t_pos+t_off, t_pos*2, t_pos*2]
+
 treeline = 588
 
 
@@ -72,7 +79,10 @@ sky.add(skybox)
 #background.add(hills)
 gen_world_objects(-100, 610,"assets/hills_3_dark.png", para_x, parallax_objs, background)
 gen_world_objects(0, 640,"assets/hills_3.png", para_x, parallax_objs, background)
-background.add(pine_tree)
+gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_amount, background)
+
+
+
 gen_chunk(chunk_y)          
 
 
@@ -123,18 +133,24 @@ def create_particles():
 
 
 def tree_leaves(p_list,time_pf,duration,radius,colour,x,y,speed):
-    particles.append([[x, y], [0.2,1], radius])
-    timer = 10 
+    particles.append([[x, y], [random.uniform(0,0.2),1], radius])
     for particle in particles:
         particle[0][0] += particle[1][0]
         particle[0][1] += particle[1][1]
         particle[2] -= time_pf
         particle[1][1] += duration
-        if len(particles) < 100:
-            pygame.draw.circle(window, colour, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
+        
+        pygame.draw.circle(window, colour, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
         if particle[2] <= 0:
             particles.remove(particle)
 
+
+
+leaf = []
+for i in range(10):
+    x = random.randrange(275, 480)
+    y = random.randrange(240, 260)
+    leaf.append([x, y])
 
 
 
@@ -154,9 +170,9 @@ def update_frame(layer,window):
 weather_handler = weather(None, window)
 
 leaf_time = 0.01
-leaf_dur = 0.0001
-leaf_rad = 2
-leaf_speed = [1,1]
+leaf_dur = 0.01
+leaf_rad = 2.5
+leaf_speed = [0.2,1]
 
 def render_window(window, dt, layer_data_1, layer_data_2):
     # particle init
@@ -167,7 +183,19 @@ def render_window(window, dt, layer_data_1, layer_data_2):
         render_layer.draw(window)
         render_layer.update()
     #weather_handler.change_weather("rain", skybox,"assets/dark_sky_1.png")
-    tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
+    #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
+        for i in range(len(leaf)):
+            pygame.draw.circle(window, (0,100,0), leaf[i], 2)
+            leaf[i][1] += random.randint(0,2)
+
+            # If the snow flake has moved off the bottom of the screen
+            if leaf[i][1] > 500:
+                # Reset it just above the top
+                y = random.randrange(200, 220)
+                leaf[i][1] = y
+                # Give it a new x position
+                x = random.randrange(275, 480)
+                leaf[i][0] = x
     update_frame(foreground,window)
 
     pygame.display.flip()
