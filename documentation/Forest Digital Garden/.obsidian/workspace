@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "7fe06ecea751852a",
+        "id": "4b493b398c89bf35",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -86,9 +86,10 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "7fe06ecea751852a",
+  "active": "4b493b398c89bf35",
   "lastOpenFiles": [
     "Presentation.md",
+    "release/Building the world.md",
     "release/Untitled.md",
     "game world/Atmosphere.md",
     "optimization/world object generation.md",
@@ -96,7 +97,6 @@
     "optimization/rendering (generalization).md",
     "optimization/scene abstraction for easier control.md",
     "optimization/layering.md",
-    "optimization/Untitled.md",
-    "Untitled.md"
+    "optimization/Untitled.md"
   ]
 }
