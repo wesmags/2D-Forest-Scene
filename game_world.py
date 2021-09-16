@@ -80,3 +80,29 @@ def gen_chunk(y, chunk_x, terrain):
             chunk.Scale(0.7)
         index -= 1
         # (NOTE) - Needs refining: Use index and count down to 0 to use arr values
+
+    
+# (AREA) Layer Initialisation
+terrain = pygame.sprite.Group()
+foreground = pygame.sprite.Group()
+midground = pygame.sprite.Group()
+midground_1 = pygame.sprite.Group()
+background = pygame.sprite.Group()
+background_1 = pygame.sprite.Group()
+background_2 = pygame.sprite.Group()
+sky = pygame.sprite.Group()
+
+layer_hierachy_bg = {
+    1 : sky,
+    2 : background_2,
+    3 : background_1,
+    4 : background,
+    5 : midground_1,
+    6 : midground
+}
+
+
+layer_hierachy_fg = {
+    1 : foreground,
+    2 : terrain
+}

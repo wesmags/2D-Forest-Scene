@@ -1,14 +1,12 @@
-import sys, os, random
  
 import pygame
 from pygame.locals import *
 
-
-from project import *
 from entity import *
 from game_world import * 
-from camera import *
+from framework import * 
 
+project_title = "Arcane"
 
 pygame.init()
  
@@ -17,8 +15,8 @@ fpsClock = pygame.time.Clock()
 
 #width, height = 1280, 720
 width, height = 1560, 800
-window = pygame.display.set_mode((width, height))
-pygame.display.set_caption(project_title) 
+window = pygame.display.set_mode((width,height))
+pygame.display.set_caption("Arcane") 
 
 keys = pygame.key.get_pressed()
 
@@ -33,6 +31,7 @@ para_scale_buffer = 0.5
 chunk_origin = 0
 c_off = 140
 chunk_x = [chunk_origin,c_off,c_off*2,c_off*3,c_off*4,c_off*5,c_off*6,c_off*7,c_off*8,c_off*9,c_off*10,c_off*11,c_off*12,c_off*13,c_off*14,c_off*15,c_off*16,c_off*17,c_off*18,c_off*19,c_off*20]
+chunk_x_a = [chunk_origin,c_off,c_off*2,c_off*3,c_off*4,c_off*5,c_off*6,c_off*7]
 c_origin = -140
 c_off = 140
 final_c = c_origin+c_off-140
@@ -52,22 +51,6 @@ treeline = 588
 skybox = Entity(0,-50, "assets/bluesky_1.jpg")
 mountain = Entity(850, 380, "assets/mountain_1.png")
 
-    
-
-
-# (AREA) Layer Initialisation
-terrain = pygame.sprite.Group()
-foreground = pygame.sprite.Group()
-midground = pygame.sprite.Group()
-midground_1 = pygame.sprite.Group()
-background = pygame.sprite.Group()
-background_1 = pygame.sprite.Group()
-background_2 = pygame.sprite.Group()
-sky = pygame.sprite.Group()
-
-
-
-    
 
 
 sky.add(skybox)
@@ -77,31 +60,16 @@ gen_world_objects(0, 577,"assets/grass_hills_1.png", para_x, para_x, midground, 
 gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_x, foreground, 0.5)
 gen_world_objects(100, 586, "assets/grass_hills_1_light_test.png", para_x, para_x, midground, 0.53)
 
+# (NOTE) - Use 1 long ground texture instead of many different smaller ones
+# Or alternatively create a chunk system 
+gen_world_objects(0, 708,"assets/GroundTextureLong2.png", [550,650*2,650*3], [650,650*2,650*3], terrain, 1.1)
 
-gen_chunk(chunk_y, chunk_x, terrain)          
-gen_world_objects(0, chunk_y, "assets/chunk_1.png", chunk_x_2, chunk_x_2, terrain, 0.7)
+
+#gen_chunk(chunk_y, chunk_x_a, terrain)          
+#gen_world_objects(0, chunk_y, "assets/chunk_1.png", chunk_x_2, chunk_x_2, terrain, 0.7)
 skybox.Scale(3)
 
-
-def event_system():
-    keys = pygame.key.get_pressed()
-    is_fs = False
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit() 
-            sys.exit() 
-        if keys[pygame.K_ESCAPE]:
-            pygame.quit() 
-            sys.exit() 
-        if event.type == VIDEORESIZE:
-            window = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-        if keys[pygame.K_F11]:
-            is_fs = not is_fs
-            if is_fs == True:
-                window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
-            else:
-                window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-
+import sys, random
 
 leaf = []
 leaf_2 = []
@@ -115,55 +83,51 @@ for i in range(10):
     leaf_2.append([x_2, y_2])
 
 
+from camera import *
 
-layer_hierachy_bg = {
-    1 : sky,
-    2 : background_2,
-    3 : background_1,
-    4 : background,
-    5 : midground_1,
-    6 : midground
-}
-layer_hierachy_fg = {
-    1 : foreground,
-    2 : terrain
-}
+def draw_particles(dt):
+    camera_differing = [0.05*dt,0.05*dt,0.1*dt,0.15*dt,0.2*dt,0.25*dt,0.3*dt]
+    for i in range(len(leaf)):
+        pygame.draw.circle(window, (0,100,0), leaf[i], 2)
+        pygame.draw.circle(window, (0,100,0), leaf_2[i], 2)
+        leaf[i][1] += random.randint(0,2)
+        leaf_2[i][1] += random.randint(0,2)
+        if keys[pygame.K_d]:
+            leaf[i][0] -= round(camera_differing[6])
+            leaf_2[i][0] -= round(camera_differing[6])
+        if keys[pygame.K_a]:
+            leaf[i][0] += round(camera_differing[6])
+            leaf_2[i][0] += round(camera_differing[6])
+        if leaf[i][1] > 500:
+            y = random.randrange(200, 220) 
+            leaf[i][1] = y
+            x = random.randrange(275, 480)
+            leaf[i][0] = x
+            pygame.draw.circle(window, (0,100,0), leaf[i], 2)
+        if leaf_2[i][1] > 500:
+            y_2 = random.randrange(200, 220) 
+            leaf_2[i][1] = y_2
+            x_2 = random.randrange(475, 680)
+            leaf_2[i][0] = x_2
+            pygame.draw.circle(window, (0,100,0), leaf_2[i], 2)
+
 
 def render_window(window, dt, layer_data_1, layer_data_2):
     keys = pygame.key.get_pressed()
     # particle init
     leaves = []
     camera_differing = [0.05*dt,0.05*dt,0.1*dt,0.15*dt,0.2*dt,0.25*dt,0.3*dt]
-    
-    for layer in layer_data_1:
-        render_layer = layer_data_1[layer]
-        render_layer.draw(window)
-        render_layer.update()
+    update_screen(window, layer_data_1)
     if keys[pygame.K_d]:
         move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "left", camera_differing)
     if keys[pygame.K_a]:
         move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "right", camera_differing)
+    
     #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
-    for i in range(len(leaf)):
-        pygame.draw.circle(window, (0,100,0), leaf[i], 2)
-        pygame.draw.circle(window, (0,100,0), leaf_2[i], 2)
-        leaf[i][1] += random.randint(0,2)
-        if keys[pygame.K_d]:
-            leaf[i][0] -= camera_differing[6]
-        if keys[pygame.K_a]:
-            leaf[i][0] += camera_differing[6]
-        if leaf[i][1] > 500:
-            y = random.randrange(200, 220) 
-            leaf[i][1] = y
-            x = random.randrange(275, 480)
-            leaf[i][0] = x
-            pygame.draw.circle(window, (0,100,0), leaf[i], 0.2)
-        if leaf_2[i][1] > 500:
-            y_2 = random.randrange(200, 220) 
-            leaf[i][1] = y
-            x_2 = random.randrange(475, 680)
-            leaf[i][0] = x
-            pygame.draw.circle(window, (0,100,0), leaf_2[i], 0.2)
+    draw_particles(dt)
+
+    # (NOTE) gotta optimise the shit on terrain and tree rendering
+    # Terrain needs most focus, make it not render when not in camera view + 1 chunk 
     update_frame(foreground,window)
     update_frame(terrain,window)
 
@@ -177,7 +141,7 @@ dt = 1/fps
 
 # Game loop.
 while True:
-    event_system()
+    event_system(width, height)
     render_window(window, dt, layer_hierachy_bg, layer_hierachy_fg)
     dt = fpsClock.tick(fps)
 pygame.quit()

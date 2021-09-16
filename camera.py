@@ -5,15 +5,24 @@ def update_frame(layer,window):
     layer.draw(window)
     layer.update()
 
+# (NOTE)
 def update_frame_c(layer,window, dir, dir_amount):
     layer.update(dir, dir_amount)
 
+# (NOTE) Currently Depreciated 
 def debug_move_camera(window, layer_data, layer_f, direction, dir_amount):
     for layer in layer_data:
         render_layer = layer_data[layer]
         render_layer.update(direction, dir_amount)
     update_frame_c(layer_f, window, direction, dir_amount)
 
+def update_screen(window, layer_data_1):
+    for layer in layer_data_1:
+        render_layer = layer_data_1[layer]
+        render_layer.draw(window)
+        render_layer.update()
+
+# (NOTE)
 def move_camera(window, sky, layer_b, layer_m, layer_f, direction, dir_amount):
     update_frame_c(sky, window, direction, dir_amount[0])
     update_frame_c(layer_b[0], window, direction, dir_amount[1])
