@@ -1,0 +1,19 @@
+## Layers
+- Layer 1
+	 - Terrain
+- Layer 2
+	- Particles
+	- Trees 
+- Layer 3 
+	- Parallax Close
+- Layer 4 
+	- Parallax Close 2 
+- Layer 5 
+	-  Parallax Far
+- Layer 6
+	-  Parallax Far 2
+- Layer 7 
+	- Mountain
+- Layer 8 
+	- Sky
+	- Clouds

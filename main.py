@@ -7,6 +7,7 @@ from pygame.locals import *
 from project import *
 from entity import *
 from game_world import * 
+from camera import *
 
 
 pygame.init()
@@ -21,23 +22,24 @@ pygame.display.set_caption(project_title)
 
 keys = pygame.key.get_pressed()
 
-world_terrain = [0,0,0,0,0,0,0,0,0,0,0,0,0]
-parallax_objs = [0,0,0]
 
 parallax_origin = 315 
 para_offset = 395
 
-para_x = [parallax_origin, parallax_origin+para_offset, parallax_origin+para_offset*2]
+para_x = [parallax_origin, parallax_origin+para_offset, parallax_origin+para_offset*2,parallax_origin+para_offset*3,parallax_origin+para_offset*4,parallax_origin+para_offset*5]
 para_y = 640
 para_scale_buffer = 0.5
 
 chunk_origin = 0
 c_off = 140
-chunk_x = [chunk_origin,c_off,c_off*2,c_off*3,c_off*4,c_off*5,c_off*6,c_off*7,c_off*8,c_off*9,c_off*10,c_off*11,c_off*12]
+chunk_x = [chunk_origin,c_off,c_off*2,c_off*3,c_off*4,c_off*5,c_off*6,c_off*7,c_off*8,c_off*9,c_off*10,c_off*11,c_off*12,c_off*13,c_off*14,c_off*15,c_off*16,c_off*17,c_off*18,c_off*19,c_off*20]
+c_origin = -140
+c_off = 140
+final_c = c_origin+c_off-140
+chunk_x_2 = [c_origin,final_c,final_c*2,final_c*3,final_c*4,final_c*5,final_c*6,final_c*7,final_c*8,final_c*9]
 chunk_y = 765
 
 
-tree_amount = [0,0,0,0]
 t_off  = 250
 t_origin = 500
 t_pos = t_off + t_origin
@@ -48,49 +50,38 @@ treeline = 588
 
 # (AREA) Entity Initialisation 
 skybox = Entity(0,-50, "assets/bluesky_1.jpg")
-
-hills = Entity(850,560, "assets/hills_3.png")
-
 mountain = Entity(850, 380, "assets/mountain_1.png")
 
-pine_tree = Entity(500, treeline, "assets/pinetree_2.png")
     
 
 
+# (AREA) Layer Initialisation
+terrain = pygame.sprite.Group()
 foreground = pygame.sprite.Group()
+midground = pygame.sprite.Group()
+midground_1 = pygame.sprite.Group()
 background = pygame.sprite.Group()
+background_1 = pygame.sprite.Group()
+background_2 = pygame.sprite.Group()
 sky = pygame.sprite.Group()
 
 
+
     
-def gen_chunk(y):
-    index = len(chunk_x) - 1
-    for chunk in world_terrain:
-        for x in chunk_x:
-            chunk = Entity(chunk_x[index],y,"assets/chunk_1.png")
-            foreground.add(chunk)
-            chunk.Scale(0.7)
-        index -= 1
-        # (NOTE) - Needs refining: Use index and count down to 0 to use arr values
 
 
 sky.add(skybox)
-background.add(mountain)
-#background.add(hills)
-#gen_world_objects(-100, 610,"assets/hills_3_dark.png", para_x, parallax_objs, background, para_scale_buffer)
-gen_world_objects(-100, 550,"assets/grass_hills_1_light.png", para_x, parallax_objs, background, 0.7)
-gen_world_objects(0, 577,"assets/grass_hills_1.png", para_x, parallax_objs, background, 0.7)
-gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_amount, background, 0.5)
+background_2.add(mountain)
+gen_world_objects(-100, 550,"assets/grass_hills_1_light.png", para_x, para_x, midground_1, 0.7)
+gen_world_objects(0, 577,"assets/grass_hills_1.png", para_x, para_x, midground, 0.7)
+gen_world_objects(0, treeline, "assets/pinetree_2.png", tree_x, tree_x, foreground, 0.5)
+gen_world_objects(100, 586, "assets/grass_hills_1_light_test.png", para_x, para_x, midground, 0.53)
 
 
-
-gen_chunk(chunk_y)          
-
-
-
-pine_tree.Scale(0.5)
+gen_chunk(chunk_y, chunk_x, terrain)          
+gen_world_objects(0, chunk_y, "assets/chunk_1.png", chunk_x_2, chunk_x_2, terrain, 0.7)
 skybox.Scale(3)
-hills.Scale(para_scale_buffer)
+
 
 def event_system():
     keys = pygame.key.get_pressed()
@@ -112,88 +103,69 @@ def event_system():
                 window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
 
-particles = []
-particles_2 = []
-
-
-
-def create_particles():
-    x = random.randint(120, 200)
-    #y = random.randint(180, 200)
-    y = 400
-    particles.append([[x, y], [1,1], 2.5])
- 
-    for particle in particles:
-        particle[0][0] += particle[1][0]
-        particle[0][1] += particle[1][1]
-        particle[2] -= 0.1
-        particle[1][1] += 0.1
-        pygame.draw.circle(window, (0, 180, 0), [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
-        if particle[2] <= 0:
-            particles.remove(particle)
-
-
-def tree_leaves(p_list,time_pf,duration,radius,colour,x,y,speed):
-    particles.append([[x, y], [random.uniform(0,0.2),1], radius])
-    for particle in particles:
-        particle[0][0] += particle[1][0]
-        particle[0][1] += particle[1][1]
-        particle[2] -= time_pf
-        particle[1][1] += duration
-        
-        pygame.draw.circle(window, colour, [int(particle[0][0]), int(particle[0][1])], int(particle[2]))
-        if particle[2] <= 0:
-            particles.remove(particle)
-
-
-
 leaf = []
+leaf_2 = []
+leaf_3 = []
 for i in range(10):
     x = random.randrange(275, 480)
     y = random.randrange(240, 260)
+    x_2 = random.randrange(475, 680)
+    y_2 = random.randrange(240, 260)
     leaf.append([x, y])
+    leaf_2.append([x_2, y_2])
 
 
 
 layer_hierachy_bg = {
     1 : sky,
-    2 : background
+    2 : background_2,
+    3 : background_1,
+    4 : background,
+    5 : midground_1,
+    6 : midground
 }
 layer_hierachy_fg = {
-    1 : foreground 
+    1 : foreground,
+    2 : terrain
 }
 
-# (NOTE) Quick fix to multiple layer iteration rendering issue
-def update_frame(layer,window):
-    layer.draw(window)
-    layer.update()
-
-weather_handler = weather(None, window)
-
-leaf_time = 0.01
-leaf_dur = 0.01
-leaf_rad = 2.5
-leaf_speed = [0.2,1]
-
 def render_window(window, dt, layer_data_1, layer_data_2):
+    keys = pygame.key.get_pressed()
     # particle init
     leaves = []
+    camera_differing = [0.05*dt,0.05*dt,0.1*dt,0.15*dt,0.2*dt,0.25*dt,0.3*dt]
     
     for layer in layer_data_1:
         render_layer = layer_data_1[layer]
         render_layer.draw(window)
         render_layer.update()
-    #weather_handler.change_weather("rain", skybox,"assets/dark_sky_1.png")
+    if keys[pygame.K_d]:
+        move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "left", camera_differing)
+    if keys[pygame.K_a]:
+        move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "right", camera_differing)
     #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
-        for i in range(len(leaf)):
-            pygame.draw.circle(window, (0,100,0), leaf[i], 2)
-            leaf[i][1] += random.randint(0,2)
-            if leaf[i][1] > 500:
-                y = random.randrange(200, 220)
-                leaf[i][1] = y
-                x = random.randrange(275, 480)
-                leaf[i][0] = x
+    for i in range(len(leaf)):
+        pygame.draw.circle(window, (0,100,0), leaf[i], 2)
+        pygame.draw.circle(window, (0,100,0), leaf_2[i], 2)
+        leaf[i][1] += random.randint(0,2)
+        if keys[pygame.K_d]:
+            leaf[i][0] -= camera_differing[6]
+        if keys[pygame.K_a]:
+            leaf[i][0] += camera_differing[6]
+        if leaf[i][1] > 500:
+            y = random.randrange(200, 220) 
+            leaf[i][1] = y
+            x = random.randrange(275, 480)
+            leaf[i][0] = x
+            pygame.draw.circle(window, (0,100,0), leaf[i], 0.2)
+        if leaf_2[i][1] > 500:
+            y_2 = random.randrange(200, 220) 
+            leaf[i][1] = y
+            x_2 = random.randrange(475, 680)
+            leaf[i][0] = x
+            pygame.draw.circle(window, (0,100,0), leaf_2[i], 0.2)
     update_frame(foreground,window)
+    update_frame(terrain,window)
 
     pygame.display.flip()
 

@@ -10,8 +10,14 @@ class Entity(pygame.sprite.DirtySprite):
         self.size = self.image.get_size()
         
 
-    def update(self):
+    def update(self, direction="None", amount=0):
         self.rect.center = self.x, self.y
+        self.direction = direction
+        self.amount = amount
+        if self.direction == "left":
+            self.x -= self.amount
+        if self.direction == "right":
+            self.x += self.amount
         
 
     def DestroyEntity(self):
@@ -59,5 +65,6 @@ class AnimatedEntity(pygame.sprite.Sprite):
     def Flip(self):
         self.flipped_img = pygame.transform.flip(self.image, True, False)
         self.image = self.flipped_img
+
 
 

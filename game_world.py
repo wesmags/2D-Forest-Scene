@@ -68,3 +68,15 @@ def gen_world_objects(offset, y, filepath, chunk_x, world_terrain, layer, para_s
             chunk.Scale(para_scale_buffer)
         index -= 1
         # (NOTE) - Needs refining: Use index and count down to 0 to use arr values
+
+
+    
+def gen_chunk(y, chunk_x, terrain):
+    index = len(chunk_x) - 1
+    for i in chunk_x:
+        for x in chunk_x:
+            chunk = Entity(chunk_x[index],y,"assets/chunk_1.png")
+            terrain.add(chunk)
+            chunk.Scale(0.7)
+        index -= 1
+        # (NOTE) - Needs refining: Use index and count down to 0 to use arr values
