@@ -22,7 +22,7 @@ def update_screen(window, layer_data_1):
         render_layer.draw(window)
         render_layer.update()
 
-# (NOTE)
+# (NOTE) 
 def move_camera(window, sky, layer_b, layer_m, layer_f, direction, dir_amount):
     update_frame_c(sky, window, direction, dir_amount[0])
     update_frame_c(layer_b[0], window, direction, dir_amount[1])

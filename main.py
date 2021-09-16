@@ -124,7 +124,7 @@ def render_window(window, dt, layer_data_1, layer_data_2):
         move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "right", camera_differing)
     
     #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
-    draw_particles(dt)
+    #draw_particles(dt)
 
     # (NOTE) gotta optimise the shit on terrain and tree rendering
     # Terrain needs most focus, make it not render when not in camera view + 1 chunk 
