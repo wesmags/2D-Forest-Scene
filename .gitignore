@@ -124,5 +124,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Assets made by Tom Randall
+# Removing Assets by Tom Randall
 assets/
