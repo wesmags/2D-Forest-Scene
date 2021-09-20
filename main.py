@@ -10,7 +10,7 @@ project_title = "Arcane"
 
 pygame.init()
  
-fps = 60
+fps = 144
 fpsClock = pygame.time.Clock()
 
 #width, height = 1280, 720
@@ -122,8 +122,7 @@ def render_window(window, dt, layer_data_1, layer_data_2):
         move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "left", camera_differing)
     if keys[pygame.K_a]:
         move_camera(window, sky, [background_2, background_1, background], [midground_1, midground], [foreground, terrain], "right", camera_differing)
-    
-    #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
+        #tree_leaves(leaves, leaf_time, leaf_dur, leaf_rad, (0,105,20), random.randint(275, 360),random.randint(180, 200), leaf_speed)
     #draw_particles(dt)
 
     # (NOTE) gotta optimise the shit on terrain and tree rendering
@@ -140,6 +139,7 @@ def render_window(window, dt, layer_data_1, layer_data_2):
 dt = 1/fps
 
 # Game loop.
+
 while True:
     event_system(width, height)
     render_window(window, dt, layer_hierachy_bg, layer_hierachy_fg)

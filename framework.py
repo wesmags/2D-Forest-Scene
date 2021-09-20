@@ -12,7 +12,6 @@ def event_system(width, height):
             sys.exit() 
         if keys[pygame.K_ESCAPE]:
             pygame.quit() 
-            sys.exit() 
         if event.type == VIDEORESIZE:
             window = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
         if keys[pygame.K_F11]:
